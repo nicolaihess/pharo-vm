@@ -33,6 +33,9 @@ static char RCSID[]="$Id: sqWin32Directory.c 1696 2007-06-03 18:13:07Z andreas $
 #define ENTRY_FOUND     0
 #define NO_MORE_ENTRIES 1
 #define BAD_PATH        2
+#define WRITE_PERMISSION (S_IWRITE| S_IWRITE >> 3 | S_IWRITE >> 6)
+#define READ_PERMISSION (S_IREAD | S_IREAD >> 3 | S_IREAD >> 6)
+#define EXEC_PERMISSION (S_IEXEC | S_IEXEC >> 3 | S_IEXEC >> 6)
 
 /* figure out if a case sensitive duplicate of the given path exists.
  useful for trying to stay in sync with case-sensitive platforms. */
@@ -180,7 +183,7 @@ int dir_Lookup(char *pathString, int pathLength, int index,
     *modificationDate = 0;
     *isDirectory      = false;
     *sizeIfFile       = 0;
-    *posixPermissions = 0777;
+    *posixPermissions = READ_PERMISSION;
     *isSymlink        = 0;
     
     /* check for a dir cache hit (but NEVER on the top level) */
@@ -285,19 +288,30 @@ int dir_Lookup(char *pathString, int pathLength, int index,
     FileTimeToSystemTime(&fileTime, &sysTime);
     *modificationDate = convertToSqueakTime(sysTime);
     
-    if (findData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
+    if (findData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
         *isDirectory= true;
+        *posixPermissions |= S_IFDIR;
+	*posixPermissions |= EXEC_PERMISSION;
+    }
     else {
         win32FileOffset ofs;
+	const char* ext = NULL;
         ofs.dwLow = findData.nFileSizeLow;
         ofs.dwHigh = findData.nFileSizeHigh;
         *sizeIfFile = ofs.offset;
-    }
-    
-	struct stat statbuf;
-	if( 0 == stat(pathString, &statbuf) ) {
-		*posixPermissions = statbuf.st_mode & 0777;
+        *posixPermissions |= S_IFREG;
+	ext = strrchr(pathString, '.');
+	if(ext && 
+	   (!strncasecmp(ext, ".exe",3) ||
+	    !strncasecmp(ext, ".com",3) ||
+	    !strncasecmp(ext, ".cmd",3) ||
+	    !strncasecmp(ext, ".bat",3))) {
+	  *posixPermissions |= EXEC_PERMISSION;
 	}
+    }
+    if (!(findData.dwFileAttributes & FILE_ATTRIBUTE_READONLY)) {
+        *posixPermissions |= WRITE_PERMISSION;
+    }
     
     return ENTRY_FOUND;
 }
@@ -329,7 +343,7 @@ int dir_EntryLookup(char *pathString, int pathLength, char* nameString, int name
     *modificationDate = 0;
     *isDirectory      = false;
     *sizeIfFile       = 0;
-    *posixPermissions = 0777;
+    *posixPermissions = READ_PERMISSION;
     *isSymlink        = 0;
     
 #if !defined(_WIN32_WCE)
@@ -399,29 +413,32 @@ int dir_EntryLookup(char *pathString, int pathLength, char* nameString, int name
     FileTimeToSystemTime(&fileTime, &sysTime);
     *modificationDate = convertToSqueakTime(sysTime);
     
-    if (winAttrs.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
+    if (winAttrs.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
         *isDirectory= true;
+        *posixPermissions |= S_IFDIR;
+	*posixPermissions |= EXEC_PERMISSION;
+    }
     else {
         win32FileOffset ofs;
+	const char* ext = NULL;
         ofs.dwLow = winAttrs.nFileSizeLow;
         ofs.dwHigh = winAttrs.nFileSizeHigh;
         *sizeIfFile = ofs.offset;
+        *posixPermissions |= S_IFREG;
+	ext = strrchr(name, '.');
+	if(ext && 
+	   (!strncasecmp(ext, ".exe",3) ||
+	    !strncasecmp(ext, ".com",3) ||
+	    !strncasecmp(ext, ".cmd",3) ||
+	    !strncasecmp(ext, ".bat",3))) {
+	  *posixPermissions |= EXEC_PERMISSION;
+	}
+    }
+    if (!(winAttrs.dwFileAttributes & FILE_ATTRIBUTE_READONLY)) {
+      *posixPermissions |= WRITE_PERMISSION;
     }
     
-	char *fullName = (char *) alloca(pathLength + nameStringLength + 10);
-	*fullName = 0;
-	struct stat statbuf;
-	strncat(fullName, pathString, pathLength);
-	strcat(fullName, "\\");
-	strncat(fullName, nameString, nameStringLength);
-	
-	if( 0 == stat(fullName, &statbuf) ) {
-		*posixPermissions = statbuf.st_mode & 0777;
-	} else {
-		*posixPermissions = 0;
-	}
-    
-	return ENTRY_FOUND;
+    return ENTRY_FOUND;
 }
 
 
