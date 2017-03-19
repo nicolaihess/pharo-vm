@@ -10,9 +10,10 @@ platformSources
 	'sqUnixCharConv.c'
 "	'sqUnixEvent.c' "
 	'sqUnixExternalPrims.c'
-	'sqUnixHeartbeat.c'
+	'sqUnixITimerHeartbeat.c'
 	'sqUnixMain.c'
 	'sqUnixMemory.c'
+	'sqUnixSpurMemory.c'
 	'sqUnixThreads.c'
 	'sqUnixVMProfile.c'
 	)

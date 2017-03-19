@@ -1,5 +1,5 @@
 private - SQSocket access
 socketRecordSize
 	"Answer the size of a SQSocket data structure in bytes."
-	<inline: true>
-	^ self sizeof: #SQSocket
+
+	^ self cCode: 'sizeof(SQSocket)' inSmalltalk: [Smalltalk wordSize * 3]

@@ -17,6 +17,8 @@ defaultInternalPlugins
 		FloatArrayPlugin 
 		FloatMathPlugin 
 		HostWindowPlugin 
+		ThreadedFFIPlugin "SqueakFFIPrims"
+		ThreadedIA32FFIPlugin "SqueakFFIPrims"
 		IA32ABIPlugin "IA32ABI"
 		JoystickTabletPlugin 
 		JPEGReaderPlugin 
@@ -36,8 +38,5 @@ defaultInternalPlugins
 		SoundGenerationPlugin 
 		SoundPlugin
 		StarSqueakPlugin 
-		SurfacePlugin 
 		UUIDPlugin
-		Win32OSProcessPlugin
-		"SDL2DisplayPlugin"
 	)

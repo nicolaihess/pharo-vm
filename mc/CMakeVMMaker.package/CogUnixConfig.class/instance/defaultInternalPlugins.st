@@ -16,6 +16,9 @@ defaultInternalPlugins
 		FilePlugin 
 		FloatArrayPlugin 
 		FloatMathPlugin 
+		ThreadedFFIPlugin 
+		ThreadedIA32FFIPlugin 
+		ThreadedARMFFIPlugin
 		IA32ABIPlugin "IA32ABI"
 		JoystickTabletPlugin 
 		KlattSynthesizerPlugin "Klatt"
@@ -31,9 +34,5 @@ defaultInternalPlugins
 		SoundGenerationPlugin 
 		SoundPlugin 
 		StarSqueakPlugin 
-		SurfacePlugin	
 		LocalePlugin
-		UnixAioPlugin
-		UnixOSProcessPlugin		
-		"SDL2DisplayPlugin"
 		)

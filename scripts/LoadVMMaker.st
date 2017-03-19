@@ -1,9 +1,8 @@
 Author useAuthor: 'LoadVMMaker' during: [ 
-	Gofer new
-		url: 'filetree://../mc';
-		package: 'ConfigurationOfCog';
-		load.	
-	(Smalltalk at: #ConfigurationOfCog) loadGit ].
+	Metacello new
+		filetreeDirectory: '../mc';
+		baseline: 'Spur';
+		load ].
 
 (Smalltalk saveAs: 'generator') 
     ifFalse: [ Smalltalk snapshot: false andQuit: true ].

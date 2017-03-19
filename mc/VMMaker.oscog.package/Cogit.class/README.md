@@ -8,8 +8,15 @@ I have concrete subclasses that implement different levels of optimization:
 	StackToRegisterMappingCogit is the current production code generator  It defers pushing operands
 	to the stack until necessary and implements a register-based calling convention for low-arity sends.
 
-	StackToRegisterMappingCogit is an experimental code generator with support for counting
+	SistaCogit is an experimental code generator with support for counting
 	conditional branches, intended to support adaptive optimization.
+
+	RegisterAllocatingCogit is an experimental code generator with support for allocating temporary variables
+	to registers. It is inended to serve as the superclass to SistaCogit once it is working.
+
+	SistaRegisterAllocatingCogit and SistaCogitClone are temporary classes that allow testing a clone of
+	SistaCogit that inherits from RegisterAllocatingCogit.  Once things work these will be merged and
+	will replace SistaCogit.
 
 coInterpreter <CoInterpreterSimulator>
 	the VM's interpreter with which I cooperate
@@ -60,7 +67,7 @@ noCheckEntryOffset <Integer>
 noCheckEntry <CogAbstractOpcode>
 	label for the first instruction of start of a method proper
 fixups <Array of <AbstractOpcode Label | nil>>
-	the labels for forward jumps that will be fixed up when reaching the relevant bytecode.  fixup shas one element per byte in methodObj's bytecode
+	the labels for forward jumps that will be fixed up when reaching the relevant bytecode.  fixups has one element per byte in methodObj's bytecode; initialPC maps to fixups[0].
 abstractOpcodes <Array of <AbstractOpcode>>
 	the code generated when compiling methodObj
 byte0 byte1 byte2 byte3 <Integer>
@@ -74,7 +81,7 @@ numAbstractOpcodes <Integer>
 blockStarts <Array of <BlockStart>>
 	the starts of blocks in the current method
 blockCount
-	the index into blockStarts as they are being noted, and hence eventuakly teh total number of blocks in the current method
+	the index into blockStarts as they are being noted, and hence eventually the total number of blocks in the current method
 labelCounter <Integer>
 	a nicety for numbering labels not needed in the production system but probably not expensive enough to worry about
 ceStackOverflowTrampoline <Integer>

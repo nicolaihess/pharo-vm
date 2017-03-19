@@ -9,15 +9,22 @@ commonCompilerFlags
 	For more information see this thread: http://forum.world.st/There-are-something-fishy-with-FFI-plugin-td4584226.html
 	"
 	^ {  
-		'-march=pentium4'.
+		'-march=pentium'.
 		'-mwindows'.
 		'-D_MT'.
-		'-msse2'. 
 		'-mthreads'. 
 		'-mwin32'.
 		'-mno-rtd'. 
 		'-mms-bitfields'. 
 		'-mno-accumulate-outgoing-args ', self winVer.
+		'-momit-leaf-frame-pointer'. 
+		'-maccumulate-outgoing-args'. 
+		'-funroll-loops'. 		
+		'-falign-loops=16'. 
+		'-falign-jumps=16'. 
+		'-falign-functions=16'. 
+		'-falign-labels=16'. 
+		'-Dsetjmp=_setjmp'.		
 		'-DWIN32'. 
 		'-DWIN32_FILE_SUPPORT'. 
 		'-DNO_ISNAN'.
@@ -31,4 +38,5 @@ commonCompilerFlags
 		'-DENABLE_FAST_BLT'.
 		'-D_USE_32BIT_TIME_T'.
 		'-D_FILE_OFFSET_BITS=64'.
-		'-D_GNU_SOURCE' }
+		'-D_GNU_SOURCE'.
+		'-DNODBGPRINT' "Otherwise it redefines printf and compiler complains"}

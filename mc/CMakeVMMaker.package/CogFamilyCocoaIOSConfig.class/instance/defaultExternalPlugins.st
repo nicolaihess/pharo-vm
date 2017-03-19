@@ -1,14 +1,13 @@
 plugins
 defaultExternalPlugins 
-	^(self versionExternalPlugins),
-		#(
+	^ #(
 		UUIDPlugin
 		FloatMathPlugin
-		AsynchFilePlugin
 		Mpeg3Plugin
 		CroquetPlugin
 		JoystickTabletPlugin
 		B3DAcceleratorPlugin
+		ClipboardExtendedPlugin
 		JPEGReadWriter2Plugin 
 		JPEGReaderPlugin
 		RePlugin
@@ -19,4 +18,5 @@ defaultExternalPlugins
 		SqueakSSLPlugin
 		SerialPlugin
 		MIDIPlugin
+		SurfacePlugin
 	)

@@ -1,0 +1,4 @@
+accessing
+isCallPrimitive
+
+	^generator == #genCallPrimitiveBytecode

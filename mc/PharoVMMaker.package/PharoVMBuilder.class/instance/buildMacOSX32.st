@@ -1,11 +1,11 @@
 building
 buildMacOSX32 
 	"Build with freetype, cairo, osprocess"
-	CogNativeBoostPlugin setTargetPlatform: #Mac32PlatformId.
+	(Smalltalk at: #CogNativeBoostPlugin) setTargetPlatform: #Mac32PlatformId.
 	
 	PharoOSXConfig new  
 		"generateForDebug;"
-		addExternalPlugins: #( FT2Plugin SDL2DisplayPlugin );
+		addExternalPlugins: #( FT2Plugin );
 		addInternalPlugins: #( UnixOSProcessPlugin );
 		addThirdpartyLibraries: #(
 			'cairo' 

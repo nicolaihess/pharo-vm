@@ -1,9 +1,13 @@
 public access
-bootstrapImage: imageName type: typeName
-	"type can be: 
-		- 'squeak' 
+bootstrapImage: imageName type: typeNameOrArrayOfTypeNames
+	"type can be:
+		- 'squeak'
+		- {'old squeak' 'squeak' }
+		- { 'cuis' 'squeak' }
 		- 'pharo'
 		- it might be 'newspeak', if needed (but is not implemented)"
-	imageType := typeName.
+	imageTypes := typeNameOrArrayOfTypeNames isArray
+						ifTrue: [typeNameOrArrayOfTypeNames]
+						ifFalse: [{typeNameOrArrayOfTypeNames}].
 	self bootstrapImage: imageName
 	
